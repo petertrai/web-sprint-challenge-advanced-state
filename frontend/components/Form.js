@@ -1,6 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
 import { resetForm, inputChange, postQuiz } from "../state/action-creators";
+// import * as actionCreators from '../state/action-creators'
+
 
 export function Form(props) {
 
@@ -20,7 +22,6 @@ export function Form(props) {
     props.resetForm()
   };
 
-  
   const areInputsEmpty = props.newQuestion.trim() === "" || props.newTrueAnswer.trim() === "" || props.newFalseAnswer.trim() === "";
 
 

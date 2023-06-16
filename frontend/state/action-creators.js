@@ -3,11 +3,11 @@ import axios from "axios"
 
 export const MOVE_CLOCKWISE = 'MOVE_CLOCKWISE'
 export const MOVE_COUNTERCLOCKWISE = 'MOVE_COUNTERCLOCKWISE'
-export const SET_QUIZ_INTO_STATE = 'SET_QUIZ_INTO_STATE'
-export const SET_SELECTED_ANSWER = 'SET_SELECTED_ANSWER'
-export const SET_INFO_MESSAGE = 'SET_INFO_MESSAGE'
 export const INPUT_CHANGE = 'INPUT_CHANGE'
 export const RESET_FORM = 'RESET_FORM'
+export const SET_INFO_MESSAGE = 'SET_INFO_MESSAGE'
+export const SET_QUIZ_INTO_STATE = 'SET_QUIZ_INTO_STATE'
+export const SET_SELECTED_ANSWER = 'SET_SELECTED_ANSWER'
 
 export function moveClockwise() { 
   return ({ type: MOVE_CLOCKWISE })
@@ -17,13 +17,17 @@ export function moveCounterClockwise() {
   return ({ type: MOVE_COUNTERCLOCKWISE })
 }
 
-export function selectAnswer() { }
+export function selectAnswer(answer) { 
+  return { type: SET_SELECTED_ANSWER, payload: answer }
+}
 
 export function setMessage() { 
   return { type: SET_INFO_MESSAGE}
 }
 
-export function setQuiz() { }
+export function setQuiz(quiz) { 
+  return { type: SET_QUIZ_INTO_STATE, payload: quiz}
+}
 
 export function inputChange(name, value) { 
   return { type: INPUT_CHANGE, payload: { name, value } }
@@ -35,13 +39,31 @@ export function resetForm() {
 // ❗ Async action creators
 export function fetchQuiz() {
   return function (dispatch) {
+    dispatch(setQuiz(null))
+    axios.get('http://localhost:9000/api/quiz/next')
+    .then(res => {
+      console.log(res.data);
+      dispatch(setQuiz(res.data))
+    })
+    .catch(err => {
+      console.error(err)
+    })
     // First, dispatch an action to reset the quiz state (so the "Loading next quiz..." message can display)
     // On successful GET:
     // - Dispatch an action to send the obtained quiz to its state
   }
 }
-export function postAnswer() {
+export function postAnswer(data) {
   return function (dispatch) {
+    axios.post('http://localhost:9000/api/quiz/answer', data)
+    .then(res => {
+      dispatch(selectAnswer(null))
+      console.log(res);
+      
+    })
+    .catch(err => {
+      console.error(err)
+    })
     // On successful POST:
     // - Dispatch an action to reset the selected answer state
     // - Dispatch an action to set the server message to state
@@ -52,7 +74,8 @@ export function postQuiz(requestBody) {
   return function (dispatch) {
     axios.post('http://localhost:9000/api/quiz/new', requestBody)
     .then(res => {
-      console.log(res)
+      console.log(res.data.data);
+      dispatch(setQuiz(res.data.data))
     })
     .catch(err => {
       console.error(err)

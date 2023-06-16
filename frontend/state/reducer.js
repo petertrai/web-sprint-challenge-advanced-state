@@ -5,6 +5,8 @@ import {
   MOVE_CLOCKWISE,
   MOVE_COUNTERCLOCKWISE,
   RESET_FORM,
+  SET_QUIZ_INTO_STATE,
+  SET_SELECTED_ANSWER,
 } from "./action-creators";
 const initialWheelState = 0;
 function wheel(state = initialWheelState, action) {
@@ -18,23 +20,30 @@ function wheel(state = initialWheelState, action) {
   }
 }
 
-// const initialQuizState = null;
+const initialQuizState = null;
+function quiz(state = initialQuizState, action) {
+  switch (action.type) {
+    case SET_QUIZ_INTO_STATE:
+      return action.payload;
+    default:
+      return state;
+  }
+}
 
-// function quiz(state = initialQuizState, action) {
-//   return state;
-// }
+const initialSelectedAnswerState = null;
+function selectedAnswer(state = initialSelectedAnswerState, action) {
+  switch (action.type) {
+    case SET_SELECTED_ANSWER:
+      return action.payload;
+    default:
+      return state;
+  }
+}
 
-// const initialSelectedAnswerState = null;
-
-// function selectedAnswer(state = initialSelectedAnswerState, action) {
-//   return state;
-// }
-
-// const initialMessageState = "";
-
-// function infoMessage(state = initialMessageState, action) {
-//   return state;
-// }
+const initialMessageState = "";
+function infoMessage(state = initialMessageState, action) {
+  return state;
+}
 
 const initialFormState = {
   newQuestion: "",
@@ -64,8 +73,8 @@ function form(state = initialFormState, action) {
 
 export default combineReducers({
   wheel,
-  // quiz,
-  // selectedAnswer,
-  // infoMessage,
+  quiz,
+  selectedAnswer,
+  infoMessage,
   form,
 });
