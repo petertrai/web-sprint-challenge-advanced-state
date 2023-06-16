@@ -1,4 +1,6 @@
 // ❗ You don't need to add extra action creators to achieve MVP
+import axios from "axios"
+
 export const MOVE_CLOCKWISE = 'MOVE_CLOCKWISE'
 export const MOVE_COUNTERCLOCKWISE = 'MOVE_COUNTERCLOCKWISE'
 export const SET_QUIZ_INTO_STATE = 'SET_QUIZ_INTO_STATE'
@@ -17,13 +19,18 @@ export function moveCounterClockwise() {
 
 export function selectAnswer() { }
 
-export function setMessage() { }
+export function setMessage() { 
+  return { type: SET_INFO_MESSAGE}
+}
 
 export function setQuiz() { }
 
-export function inputChange() { }
-
-export function resetForm() { }
+export function inputChange(name, value) { 
+  return { type: INPUT_CHANGE, payload: { name, value } }
+}
+export function resetForm() {
+  return ({ type: RESET_FORM })
+ }
 
 // ❗ Async action creators
 export function fetchQuiz() {
@@ -41,11 +48,15 @@ export function postAnswer() {
     // - Dispatch the fetching of the next quiz
   }
 }
-export function postQuiz() {
+export function postQuiz(requestBody) {
   return function (dispatch) {
-    // On successful POST:
-    // - Dispatch the correct message to the the appropriate state
-    // - Dispatch the resetting of the form
+    axios.post('http://localhost:9000/api/quiz/new', requestBody)
+    .then(res => {
+      console.log(res)
+    })
+    .catch(err => {
+      console.error(err)
+    })
   }
 }
 // ❗ On promise rejections, use log statements or breakpoints, and put an appropriate error message in state

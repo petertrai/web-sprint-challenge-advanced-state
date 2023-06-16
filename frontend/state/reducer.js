@@ -1,9 +1,12 @@
 // ❗ You don't need to add extra reducers to achieve MVP
 import { combineReducers } from "redux";
-import { MOVE_CLOCKWISE, MOVE_COUNTERCLOCKWISE } from "./action-creators";
-
+import {
+  INPUT_CHANGE,
+  MOVE_CLOCKWISE,
+  MOVE_COUNTERCLOCKWISE,
+  RESET_FORM,
+} from "./action-creators";
 const initialWheelState = 0;
-
 function wheel(state = initialWheelState, action) {
   switch (action.type) {
     case MOVE_CLOCKWISE:
@@ -15,23 +18,23 @@ function wheel(state = initialWheelState, action) {
   }
 }
 
-const initialQuizState = null;
+// const initialQuizState = null;
 
-function quiz(state = initialQuizState, action) {
-  return state;
-}
+// function quiz(state = initialQuizState, action) {
+//   return state;
+// }
 
-const initialSelectedAnswerState = null;
+// const initialSelectedAnswerState = null;
 
-function selectedAnswer(state = initialSelectedAnswerState, action) {
-  return state;
-}
+// function selectedAnswer(state = initialSelectedAnswerState, action) {
+//   return state;
+// }
 
-const initialMessageState = "";
+// const initialMessageState = "";
 
-function infoMessage(state = initialMessageState, action) {
-  return state;
-}
+// function infoMessage(state = initialMessageState, action) {
+//   return state;
+// }
 
 const initialFormState = {
   newQuestion: "",
@@ -39,13 +42,30 @@ const initialFormState = {
   newFalseAnswer: "",
 };
 function form(state = initialFormState, action) {
-  return state;
+  switch (action.type) {
+    case INPUT_CHANGE: {
+      const { name, value } = action.payload;
+      return {
+        ...state,
+        [name]: value,
+      };
+    }
+    case RESET_FORM:
+      return {
+        ...state,
+        newQuestion: "",
+        newTrueAnswer: "",
+        newFalseAnswer: "",
+      };
+    default:
+      return state;
+  }
 }
 
 export default combineReducers({
   wheel,
-  quiz,
-  selectedAnswer,
-  infoMessage,
+  // quiz,
+  // selectedAnswer,
+  // infoMessage,
   form,
 });
