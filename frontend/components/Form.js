@@ -1,8 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
-import { resetForm, inputChange, postQuiz } from "../state/action-creators";
+import { resetForm, inputChange, postQuiz, setMessage} from "../state/action-creators";
 // import * as actionCreators from '../state/action-creators'
-
 
 export function Form(props) {
 
@@ -13,12 +12,11 @@ export function Form(props) {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    const requestBody = {
-      question_text: props.newQuestion,
-      true_answer_text: props.newTrueAnswer,
-      false_answer_text: props.newFalseAnswer,
-    };
-    props.postQuiz(requestBody);
+    const stringifiedBody = { 
+      "question_text": props.newQuestion, "true_answer_text": props.newTrueAnswer, "false_answer_text": props.newFalseAnswer };
+    props.postQuiz(stringifiedBody);
+    console.log(stringifiedBody);
+      props.setMessage(`Congrats: "${props.newQuestion}" is a great question!`)
     props.resetForm()
   };
 
@@ -63,4 +61,4 @@ const mapStateToProps = (state) => {
 
 // export default connect((st) => st, { resetForm: actionCreators.resetForm, inputChange: actionCreators.inputChange})(Form);
 
-export default connect(mapStateToProps, { resetForm, inputChange, postQuiz })(Form);
+export default connect(mapStateToProps, { resetForm, inputChange, postQuiz, setMessage })(Form);

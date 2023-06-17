@@ -21,8 +21,8 @@ export function selectAnswer(answer) {
   return { type: SET_SELECTED_ANSWER, payload: answer }
 }
 
-export function setMessage() { 
-  return { type: SET_INFO_MESSAGE}
+export function setMessage(message) { 
+  return { type: SET_INFO_MESSAGE, payload: message}
 }
 
 export function setQuiz(quiz) { 
@@ -42,7 +42,6 @@ export function fetchQuiz() {
     dispatch(setQuiz(null))
     axios.get('http://localhost:9000/api/quiz/next')
     .then(res => {
-      console.log(res.data);
       dispatch(setQuiz(res.data))
     })
     .catch(err => {
@@ -53,13 +52,14 @@ export function fetchQuiz() {
     // - Dispatch an action to send the obtained quiz to its state
   }
 }
+
 export function postAnswer(data) {
   return function (dispatch) {
     axios.post('http://localhost:9000/api/quiz/answer', data)
     .then(res => {
+      dispatch(setMessage(res.data.message));
       dispatch(selectAnswer(null))
-      console.log(res);
-      
+      dispatch(fetchQuiz())
     })
     .catch(err => {
       console.error(err)
@@ -70,12 +70,14 @@ export function postAnswer(data) {
     // - Dispatch the fetching of the next quiz
   }
 }
-export function postQuiz(requestBody) {
+export function postQuiz(stringifiedBody) {
   return function (dispatch) {
-    axios.post('http://localhost:9000/api/quiz/new', requestBody)
+    axios.post('http://localhost:9000/api/quiz/new', stringifiedBody)
     .then(res => {
-      console.log(res.data.data);
-      dispatch(setQuiz(res.data.data))
+      console.log(res);
+      
+      dispatch(setQuiz(res.data));
+      // dispatch(setQuiz(res.data.data))
     })
     .catch(err => {
       console.error(err)
